@@ -111,11 +111,74 @@ function searchOrder() {
 }
 
 function updateOrder() {
-    const query = document.getElementById('updateQuery').value.toLowerCase();
-    const results = orders.filter(order => order.orderId.toString() === query);
+    const query = document.getElementById('updateQuery').value;
+    const order = orders.find(order => order.orderId.toString() === query);
 
-    displayOrderDetails(results, 'updateOrderDetails');
+    if (order) {
+        displayEditableOrderDetails(order);
+        document.getElementById('saveUpdate').style.display = 'block'; // Show the save button
+    } else {
+        document.getElementById('updateOrderDetails').innerHTML = '<p>No orders found.</p>';
+        document.getElementById('saveUpdate').style.display = 'none'; // Hide the save button if no order is found
+    }
 }
+
+function displayEditableOrderDetails(order) {
+    const container = document.getElementById('updateOrderDetails');
+    container.innerHTML = `<p><strong>Order ID:</strong> ${order.orderId}</p>`;
+    
+    order.items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('editable-order-item');
+        itemDiv.innerHTML = `
+            <div class="form-group">
+                <label for="item-${index}-id">ID:</label>
+                <input type="text" class="form-control" id="item-${index}-id" value="${item.itemId}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="item-${index}-name">Items:</label>
+                <input type="text" class="form-control" id="item-${index}-name" value="${item.items}">
+            </div>
+            <div class="form-group">
+                <label for="item-${index}-qty">Qty:</label>
+                <input type="number" class="form-control" id="item-${index}-qty" value="${item.qty}">
+            </div>
+            <div class="form-group">
+                <label for="item-${index}-price">Price:</label>
+                <input type="number" class="form-control" id="item-${index}-price" value="${item.price}" readonly>
+            </div>
+            <hr>
+        `;
+        container.appendChild(itemDiv);
+    });
+}
+
+document.getElementById('saveUpdate').addEventListener('click', () => {
+    const query = document.getElementById('updateQuery').value;
+    const order = orders.find(order => order.orderId.toString() === query);
+
+    if (order) {
+        order.items = order.items.map((item, index) => {
+            const itemId = document.getElementById(`item-${index}-id`).value;
+            const itemName = document.getElementById(`item-${index}-name`).value;
+            const qty = parseInt(document.getElementById(`item-${index}-qty`).value);
+            const price = parseFloat(document.getElementById(`item-${index}-price`).value);
+
+            return {
+                itemId,
+                items: itemName,
+                qty,
+                price,
+                total: qty * price
+            };
+        });
+
+        order.totalPrice = order.items.reduce((sum, item) => sum + item.total, 0);
+
+        alert('Order updated successfully!');
+        navigateToSection('home');
+    }
+});
 
 function displayOrderDetails(results, elementId) {
     const container = document.getElementById(elementId);
