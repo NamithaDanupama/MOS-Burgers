@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BurgersMOS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="bg-dark text-white text-center py-5">
+        <h1>BurgersMOS</h1>
+        <p>Grill. Bite. Delight!</p>
+    </header>
+    <main class="container my-4">
+        <div id="homePage" class="row">
+            <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <img src="img/image 01.jpg" alt="Delicious Burger" class="img-fluid">
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <nav class="home-nav text-center">
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('place-order')">Place Order</button>
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('search-order')">Search Order</button>
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('view-order')">View Orders</button>
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('update-order')">Update Order</button>
+                </nav>
+            </div>
+        </div>
+        <section id="place-order" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">Place Order</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="placeOrderForm" class="mb-3">
+                        <div class="form-group">
+                            <label for="itemId">ID:</label>
+                            <input type="text" class="form-control" id="itemId" name="itemId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="items">Items:</label>
+                            <input type="text" class="form-control" id="items" name="items" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="qty">Qty:</label>
+                            <input type="number" class="form-control" id="qty" name="qty" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="number" class="form-control" id="price" name="price" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Add Item</button>
+                    </form>
+                    <form id="completeOrderForm">
+                        <button type="submit" class="btn btn-success">Complete Order</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Order Summary</h4>
+                            <p>Order ID: <span id="orderId"></span></p>
+                            <p>Total Price: $<span id="totalPrice">0</span></p>
+                            <p>No of Items: <span id="noOfItems">0</span></p>
+                            <p>Discount: $<span id="discount">0</span></p>
+                            <p>Total Amount: $<span id="totalAmount">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('home')">Home</button>
+        </section>
+        <section id="search-order" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">Search Order</h2>
+            <form id="searchOrderForm" class="mb-3">
+                <div class="form-group">
+                    <label for="searchQuery">Enter the Order ID:</label>
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div id="orderDetails" class="card p-3 bg-white"></div>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('home')">Home</button>
+        </section>
+        <section id="view-order" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">View Orders</h2>
+            <div id="allOrdersDetails" class="card p-3 bg-white">
+                <!-- Order details will be displayed here -->
+            </div>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('home')">Home</button>
+        </section>
+        <section id="update-order" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">Update Order</h2>
+            <form id="updateOrderForm" class="mb-3">
+                <div class="form-group">
+                    <label for="updateQuery">Enter the Order ID:</label>
+                    <input type="text" class="form-control" id="updateQuery" name="updateQuery" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div id="updateOrderDetails" class="card p-3 bg-white"></div>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('home')">Home</button>
+        </section>
+    </main>
+    <footer class="bg-dark text-white text-center py-3">
+        <p>Technical Support: +94 111 258 258</p>
+        <button class="btn btn-danger" onclick="nextCustomer()">Next Customer</button>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
