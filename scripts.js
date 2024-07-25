@@ -1,60 +1,122 @@
+// Initialize items array
+let items = [];
 let orders = [];
 let currentOrder = [];
 let orderIdCounter = 1;
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializePage();
+// Function to handle role selection
+function selectRole(role) {
+    if (role === 'owner') {
+        navigateToSection('ownerFunctions');
+    } else if (role === 'worker') {
+        navigateToSection('workerFunctions');
+    }
+}
 
-    document.getElementById('placeOrderForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        addItemToOrder();
-    });
+// Function to navigate between sections
+function navigateToSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+}
 
-    document.getElementById('completeOrderForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        placeOrder();
-    });
-
-    document.getElementById('searchOrderForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        searchOrder();
-    });
-
-    document.getElementById('updateOrderForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        updateOrder();
-    });
-
-    document.getElementById('saveUpdate').addEventListener('click', () => {
-        saveUpdatedOrder();
-    });
-
-    document.querySelector('button[onclick="navigateToSection(\'view-order\')"]').addEventListener('click', viewAllOrders);
+// Event listeners for forms
+document.getElementById('addItemForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addItem();
 });
 
-function initializePage() {
-    navigateToSection('roleSelection');
+document.getElementById('removeItemForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    removeItem();
+});
+
+document.getElementById('placeOrderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addToOrder();
+});
+
+document.getElementById('completeOrderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    placeOrder();
+});
+
+document.getElementById('searchOrderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    searchOrder();
+});
+
+document.getElementById('updateOrderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    updateOrder();
+});
+
+// Add new item function
+function addItem() {
+    const newItemId = document.getElementById('newItemId').value;
+    const newItemName = document.getElementById('newItemName').value;
+    const newItemPrice = parseFloat(document.getElementById('newItemPrice').value);
+
+    const item = {
+        itemId: newItemId,
+        itemName: newItemName,
+        itemPrice: newItemPrice,
+    };
+
+    items.push(item);
+    alert('Item added successfully!');
+    clearAddItemForm();
+    displayItems();
 }
 
-function selectRole(role) {
-    if (role === 'worker') {
-        navigateToSection('workerFunctions');
-    } else {
-        alert('Shop owner functionalities are not implemented yet.');
+// Clear add item form
+function clearAddItemForm() {
+    document.getElementById('newItemId').value = '';
+    document.getElementById('newItemName').value = '';
+    document.getElementById('newItemPrice').value = '';
+}
+
+// Display items
+function displayItems() {
+    const itemsList = document.getElementById('itemsList');
+    itemsList.innerHTML = '';
+
+    if (items.length === 0) {
+        itemsList.innerHTML = '<p>No items available.</p>';
+        return;
     }
-}
 
-function navigateToSection(sectionId) {
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
+    const ul = document.createElement('ul');
+    ul.classList.add('list-group');
+
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = `ID: ${item.itemId}, Name: ${item.itemName}, Price: $${item.itemPrice.toFixed(2)}`;
+        ul.appendChild(li);
     });
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.classList.add('active');
-    }
+
+    itemsList.appendChild(ul);
 }
 
-function addItemToOrder() {
+// Remove item function
+function removeItem() {
+    const removeItemId = document.getElementById('removeItemId').value;
+    const index = items.findIndex(item => item.itemId === removeItemId);
+
+    if (index !== -1) {
+        items.splice(index, 1);
+        alert('Item removed successfully!');
+        displayItems();
+    } else {
+        alert('Item not found.');
+    }
+
+    document.getElementById('removeItemId').value = '';
+}
+
+// Order functions
+function addToOrder() {
     const itemId = document.getElementById('itemId').value;
     const items = document.getElementById('items').value;
     const qty = parseInt(document.getElementById('qty').value);
@@ -198,54 +260,43 @@ function updateOrder() {
     if (order) {
         updateOrderDetailsDiv.innerHTML = `
             <h4>Order ID: ${order.orderId}</h4>
-            <form id="editOrderForm">
+            <ul class="list-group">
                 ${order.items.map((item, index) => `
-                    <div class="form-group">
-                        <label for="item-${index}">Item ${index + 1}</label>
-                        <input type="text" class="form-control mb-2" id="item-${index}" value="${item.items}">
-                        <label for="qty-${index}">Qty</label>
-                        <input type="number" class="form-control mb-2" id="qty-${index}" value="${item.qty}">
-                        <label for="price-${index}">Price</label>
-                        <input type="number" class="form-control mb-2" id="price-${index}" value="${item.price}">
-                    </div>
+                    <li class="list-group-item">
+                        <input type="text" class="form-control" value="${item.itemId}" id="updateItemId${index}">
+                        <input type="text" class="form-control" value="${item.items}" id="updateItems${index}">
+                        <input type="number" class="form-control" value="${item.qty}" id="updateQty${index}">
+                        <input type="number" class="form-control" value="${item.price.toFixed(2)}" id="updatePrice${index}">
+                    </li>
                 `).join('')}
-            </form>
+            </ul>
+            <button class="btn btn-success mt-3" onclick="saveUpdatedOrder(${order.orderId})">Save Changes</button>
         `;
-        document.getElementById('saveUpdate').style.display = 'block';
     } else {
         updateOrderDetailsDiv.innerHTML = '<p>No order found with the provided ID.</p>';
-        document.getElementById('saveUpdate').style.display = 'none';
     }
 }
 
-function saveUpdatedOrder() {
-    const updateQuery = document.getElementById('updateQuery').value;
-    const order = orders.find(o => o.orderId === parseInt(updateQuery));
+function saveUpdatedOrder(orderId) {
+    const order = orders.find(o => o.orderId === orderId);
 
     if (order) {
-        const editOrderForm = document.getElementById('editOrderForm');
-        const updatedItems = [];
-
         order.items.forEach((item, index) => {
-            const updatedItem = {
-                itemId: item.itemId,
-                items: editOrderForm.querySelector(`#item-${index}`).value,
-                qty: parseInt(editOrderForm.querySelector(`#qty-${index}`).value),
-                price: parseFloat(editOrderForm.querySelector(`#price-${index}`).value),
-                totalPrice: parseInt(editOrderForm.querySelector(`#qty-${index}`).value) * parseFloat(editOrderForm.querySelector(`#price-${index}`).value),
-            };
-            updatedItems.push(updatedItem);
+            item.itemId = document.getElementById(`updateItemId${index}`).value;
+            item.items = document.getElementById(`updateItems${index}`).value;
+            item.qty = parseInt(document.getElementById(`updateQty${index}`).value);
+            item.price = parseFloat(document.getElementById(`updatePrice${index}`).value);
+            item.totalPrice = item.qty * item.price;
         });
 
-        order.items = updatedItems;
-        order.totalPrice = updatedItems.reduce((acc, item) => acc + item.totalPrice, 0);
-        order.noOfItems = updatedItems.reduce((acc, item) => acc + item.qty, 0);
+        order.totalPrice = order.items.reduce((total, item) => total + item.totalPrice, 0);
+        order.noOfItems = order.items.reduce((total, item) => total + item.qty, 0);
         order.discount = calculateDiscount(order.totalPrice);
         order.totalAmount = order.totalPrice - order.discount;
 
         alert('Order updated successfully!');
-        document.getElementById('saveUpdate').style.display = 'none';
+        navigateToSection('workerFunctions');
     } else {
-        alert('Error updating the order.');
+        alert('Order not found.');
     }
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
     <header class="bg-dark text-white text-center py-5">
-        <h1>BurgersMOS</h1>
+        <h1>MOS Burgers</h1>
         <p>Grill. Bite. Delight!</p>
     </header>
     <main class="container my-4">
@@ -21,6 +21,57 @@
                 <button class="btn btn-primary btn-lg my-2" onclick="selectRole('worker')">Worker</button>
             </div>
         </div>
+
+        <!-- Owner Functions Section -->
+        <div id="ownerFunctions" class="row section">
+            <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <nav class="home-nav text-center">
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('add-item')">Add New Item</button>
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('view-items')">View Items</button>
+                    <button class="btn btn-primary btn-lg rounded-pill mx-1 my-2" onclick="navigateToSection('remove-item')">Remove Item</button>
+                </nav>
+            </div>
+        </div>
+
+        <section id="add-item" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">Add New Item</h2>
+            <form id="addItemForm" class="mb-3">
+                <div class="form-group">
+                    <label for="newItemId">Item ID:</label>
+                    <input type="text" class="form-control" id="newItemId" name="newItemId" required>
+                </div>
+                <div class="form-group">
+                    <label for="newItemName">Item Name:</label>
+                    <input type="text" class="form-control" id="newItemName" name="newItemName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newItemPrice">Price:</label>
+                    <input type="number" class="form-control" id="newItemPrice" name="newItemPrice" required>
+                </div>
+                <button type="submit" class="btn btn-success">Add Item</button>
+            </form>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('ownerFunctions')">Back to Owner Functions</button>
+        </section>
+
+        <section id="view-items" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">View Items</h2>
+            <div id="itemsList" class="card p-3 bg-white">
+                <!-- Item details will be displayed here -->
+            </div>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('ownerFunctions')">Back to Owner Functions</button>
+        </section>
+
+        <section id="remove-item" class="section bg-light p-4 rounded">
+            <h2 class="text-primary">Remove Item</h2>
+            <form id="removeItemForm" class="mb-3">
+                <div class="form-group">
+                    <label for="removeItemId">Enter the Item ID:</label>
+                    <input type="text" class="form-control" id="removeItemId" name="removeItemId" required>
+                </div>
+                <button type="submit" class="btn btn-danger">Remove Item</button>
+            </form>
+            <button class="btn btn-secondary mt-3" onclick="navigateToSection('ownerFunctions')">Back to Owner Functions</button>
+        </section>
 
         <!-- Worker Functions Section -->
         <div id="workerFunctions" class="row section">
@@ -105,21 +156,17 @@
                     <label for="updateQuery">Enter the Order ID:</label>
                     <input type="text" class="form-control" id="updateQuery" name="updateQuery" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-warning">Update</button>
             </form>
-            <div id="updateOrderDetails" class="card p-3 bg-white">
-                <!-- Editable order details will be displayed here -->
-            </div>
-            <button id="saveUpdate" class="btn btn-success mt-3" style="display: none;">Save Changes</button>
+            <div id="updateOrderDetails" class="card p-3 bg-white"></div>
+            <button id="saveUpdate" class="btn btn-success mt-3" style="display: none;" onclick="saveUpdatedOrder()">Save Changes</button>
             <button class="btn btn-secondary mt-3" onclick="navigateToSection('workerFunctions')">Back to Worker Functions</button>
         </section>
     </main>
     <footer class="bg-dark text-white text-center py-3">
         <p>Technical Support: +94 111 258 258</p>
+        <button class="btn btn-danger" onclick="nextCustomer()">Next Customer</button>
     </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
